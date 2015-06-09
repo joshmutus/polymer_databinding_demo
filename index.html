@@ -10,11 +10,12 @@
         #parent_group {
             background-color: #4285F4;
         }
-        #foo_button{
+        #page_button {
             background-color: #DB4437;
         }
         body{
             font-family: Roboto;
+            background-color: #E67C73;
         }
     </style>
 </head>
@@ -22,12 +23,13 @@
 <div  id="parent_group">
     <parent-element id = "foo"></parent-element>
 </div>
-<paper-button raised id = "foo_button">Change item's name at page level</paper-button>
+<paper-button raised id = "page_button">Change item's name at page level</paper-button>
 
 </body>
 </html>
+
 <script>
-    foo_button.onclick = function(){
+    page_button.onclick = function(){
         foo.myName = "Page";
     }
 </script>
@@ -64,9 +66,9 @@
 
 <dom-module id="child-element">
     <template>
-        <span on-click="childClick">
-            Name set at <span>{{prop}}</span> level. Click me to change at child-level
-        </span>
+        <span>Name set at <span>{{prop}}</span> level.</span><br>
+        <paper-button raised><span on-click="childClick">Click me to change at child-level</span></paper-button><br>
+        <paper-button raised on-click="fireClick"> Click me to send signal to parent</paper-button>
     </template>
 
     <script>
@@ -84,9 +86,10 @@
                 console.log(this.obj.foo)
             },
             childClick: function(){
-
                 this.prop = "Child";
-                console.log("Clicked Child");
+                this.fire("child-event-fire","Text sent from child");
+            },
+            fireClick: function(){
                 this.fire("child-event-fire","Text sent from child");
             }
         });
