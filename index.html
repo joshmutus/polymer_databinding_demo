@@ -1,0 +1,99 @@
+<!DOCTYPE Html>
+<html>
+<head>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
+    <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="bower_components/paper-item/paper-item.html">
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <style is="custom-style">
+        #parent_group {
+            background-color: #4285F4;
+        }
+        #foo_button{
+            background-color: #DB4437;
+        }
+        body{
+            font-family: Roboto;
+        }
+    </style>
+</head>
+<body>
+<div  id="parent_group">
+    <parent-element id = "foo"></parent-element>
+</div>
+<paper-button raised id = "foo_button">Change item's name at page level</paper-button>
+
+</body>
+</html>
+<script>
+    foo_button.onclick = function(){
+        foo.myName = "Page";
+    }
+</script>
+
+<dom-module id="parent-element">
+    <style>
+        #pButton{
+            background-color: #7BAAF7;
+        }
+    </style>
+    <template>
+        <paper-button on-click="parentClick" id="pButton">Change item's name at parent level</paper-button>
+        <paper-item><child-element prop="{{myName}}" obj="{{myObj}}"></child-element></paper-item>
+    </template>
+    <script>
+        Polymer({
+            is: "parent-element",
+            myName: {
+                type: String
+            },
+            myObj: {
+                type: Object
+            },
+            parentClick: function(){
+                this.myName = "Parent";
+            },
+            myObjChanged: function(){//trying to figure out how to handle an event when the myObj is changed
+                console.log("I have no idea what I'm doing")
+            }
+
+
+        });
+    </script>
+</dom-module>
+
+<dom-module id="child-element">
+    <template>
+        <span on-click="childClick">
+            Name set at <span>{{prop}}</span> level. Click me to change at child-level
+        </span>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'child-element',
+            properties: {
+                prop: {
+                    type: String,
+                    notify: true
+                },
+                obj: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            ready: function(){
+                this.prop = "Child"
+                this.obj = {foo: "bar"}
+                console.log(this.obj.foo)
+            },
+            childClick: function(){
+                this.prop = "Child";
+                console.log("Clicked Child");
+                this.obj.foo = "baz"
+                console.log(this.obj.foo)
+            }
+        });
+    </script>
+</dom-module>
