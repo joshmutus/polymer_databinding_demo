@@ -40,7 +40,7 @@
     </style>
     <template>
         <paper-button on-click="parentClick" id="pButton">Change item's name at parent level</paper-button>
-        <paper-item><child-element prop="{{myName}}" obj="{{myObj}}"></child-element></paper-item>
+        <paper-item><child-element prop="{{myName}}" on-child-event-fire="parentObserve"></child-element></paper-item>
     </template>
     <script>
         Polymer({
@@ -54,11 +54,10 @@
             parentClick: function(){
                 this.myName = "Parent";
             },
-            myObjChanged: function(){//trying to figure out how to handle an event when the myObj is changed
-                console.log("I have no idea what I'm doing")
+            parentObserve: function(e){//trying to figure out how to handle an event when the myObj is changed
+                console.log("Observed child event at parent level")
+                console.log(e.detail)
             }
-
-
         });
     </script>
 </dom-module>
@@ -77,10 +76,6 @@
                 prop: {
                     type: String,
                     notify: true
-                },
-                obj: {
-                    type: Object,
-                    notify: true
                 }
             },
             ready: function(){
@@ -89,10 +84,10 @@
                 console.log(this.obj.foo)
             },
             childClick: function(){
+
                 this.prop = "Child";
                 console.log("Clicked Child");
-                this.obj.foo = "baz"
-                console.log(this.obj.foo)
+                this.fire("child-event-fire","Text sent from child");
             }
         });
     </script>
